@@ -1,3 +1,4 @@
+from logging import INFO
 import tkinter as tk
 import ttkbootstrap as tb
 from ttkbootstrap.constants import *
@@ -48,13 +49,24 @@ class TimeLoggerApplication:
         self.timer_label.grid(row=3, column=2, padx=5, pady=5, sticky='ew')
 
         # Idő hozzáadó gombok
-        self.add_10min = tb.Button(root, text="+10 perc", command=lambda: self.add_time(600), bootstyle=INFO)
+        self.add_10min = tb.Button(root, text="+10 perc", command=lambda: self.add_time(600),  bootstyle=INFO)
         self.add_30min = tb.Button(root, text="+30 perc", command=lambda: self.add_time(1800), bootstyle=INFO)
-        self.add_1h = tb.Button(root, text="+1 óra", command=lambda: self.add_time(3600), bootstyle=INFO)
+        self.add_1h    = tb.Button(root, text="+1 óra",   command=lambda: self.add_time(3600), bootstyle=INFO)
 
         self.add_10min.grid(row=4, column=0, padx=5, pady=5, sticky='ew')
         self.add_30min.grid(row=4, column=1, padx=5, pady=5, sticky='ew')
         self.add_1h.grid(row=4, column=2, padx=5, pady=5, sticky='ew')
+
+
+         # Idő visszaállító gombok
+        self.sub_10min = tb.Button(root, text="-10 perc", command=lambda: self.add_time(-600),  bootstyle=INFO)
+        self.sub_30min = tb.Button(root, text="-30 perc", command=lambda: self.add_time(-1800), bootstyle=INFO)
+        self.sub_1h    = tb.Button(root, text="-1 óra",   command=lambda: self.add_time(-3600), bootstyle=INFO)
+
+        self.sub_10min.grid(row=5, column=0, padx=5, pady=5, sticky='ew')
+        self.sub_30min.grid(row=5, column=1, padx=5, pady=5, sticky='ew')
+        self.sub_1h.grid(row=5, column=2, padx=5, pady=5, sticky='ew')
+
 
         self.timer_running = False
         self.time_started = None
@@ -143,7 +155,8 @@ class TimeLoggerApplication:
             elapsed = (datetime.now() - self.time_started).total_seconds()
             self.elapsed_seconds += int(elapsed)
             self.time_started = datetime.now()
-        self.elapsed_seconds += seconds
+        #self.elapsed_seconds += seconds
+        self.elapsed_seconds = max(0, self.elapsed_seconds + seconds)  # nem megy - alá
         self.data[self.selected_task] = self.elapsed_seconds
         self.save_tasks()
         self.refresh_listbox()
